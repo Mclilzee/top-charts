@@ -14,20 +14,22 @@ fn main() -> Result<(), std::io::Error> {
     BufReader::new(file).read_to_string(&mut buf)?;
 
     let mut stats_map: HashMap<String, MonthlyStat> = HashMap::new();
-    buf.split("==============")
+    let stats = buf
+        .split("==============")
         .map(MonthlyStat::parse)
-        .collect::<Vec<MonthlyStat>>()
-        .into_iter()
-        .for_each(|ns| {
-            match stats_map.get_mut(&ns.month) {
-                Some(s) => *s += ns,
-                None => {
-                    stats_map.insert(ns.month.clone(), ns);
-                }
-            };
-        });
+        .collect::<Vec<MonthlyStat>>();
 
-    println!("{:?}", stats_map);
+    let first_month = &stats.first().unwrap().month;
+    let last_month = &stats.last().unwrap().month;
+
+    stats.into_iter().for_each(|ns| {
+        match stats_map.get_mut(&ns.month) {
+            Some(s) => *s += ns,
+            None => {
+                stats_map.insert(ns.month.clone(), ns);
+            }
+        };
+    });
 
     Ok(())
 }

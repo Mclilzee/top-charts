@@ -167,7 +167,7 @@ mod test {
         };
 
         let second = MonthlyStat {
-            month: "December 2020".to_string(),
+            month: "June 1999".to_string(),
             users: 100,
             lessons: 200,
             project_submissions: 3,
