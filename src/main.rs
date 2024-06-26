@@ -106,7 +106,7 @@ fn draw_chart(stats: &[MonthlyStat]) {
         .add_axis_bottom(&x)
         .add_axis_left(&y)
         .add_legend_at(AxisPosition::Bottom)
-        .save("line-chart.svg")
+        .save("top-chart.svg")
         .unwrap();
 }
 
