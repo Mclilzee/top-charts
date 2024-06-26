@@ -1,3 +1,4 @@
+#[derive(PartialEq, Debug)]
 pub struct MonthlyStat {
     pub month: String,
     pub users: u32,
@@ -31,5 +32,14 @@ mod test {
             project_submissions: 1000,
             projects_liked: 202020,
         };
+
+        let str = r#"December 1st, 2022
+400 users signed up
+200 lessons completed
+1000 project submissions added
+202020 projects liked"#;
+
+        let result = MonthlyStat::parse(str);
+        assert_eq!(expected, result);
     }
 }
