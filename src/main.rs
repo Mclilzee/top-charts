@@ -39,7 +39,7 @@ fn draw_chart(stats: &[MonthlyStat]) {
 
     let width = 1920;
     let height = 800;
-    let (top, right, bottom, left) = (50, 200, 50, 100);
+    let (top, right, bottom, left) = (50, 0, 50, 80);
 
     // Create a band scale that will interpolate values in [0, 200] to values in the
     // [0, availableWidth] range (the width of the chart without the margins).
@@ -67,11 +67,11 @@ fn draw_chart(stats: &[MonthlyStat]) {
     let mut project_submissions = vec![];
     let mut projects_liked = vec![];
 
-    stats.iter().enumerate().for_each(|(i, s)| {
-        users.push((i as f32, s.users as f32));
-        lessons.push((i as f32, s.lessons as f32));
-        project_submissions.push((i as f32, s.projects_liked as f32));
-        projects_liked.push((i as f32, s.project_submissions as f32));
+    stats.iter().for_each(|s| {
+        users.push((s.month.clone(), s.users as f32));
+        lessons.push((s.month.clone(), s.lessons as f32));
+        project_submissions.push((s.month.clone(), s.projects_liked as f32));
+        projects_liked.push((s.month.clone(), s.project_submissions as f32));
     });
 
     let users_view = LineSeriesView::new()
