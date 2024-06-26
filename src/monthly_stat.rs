@@ -8,7 +8,7 @@ pub struct MonthlyStat {
 }
 
 impl MonthlyStat {
-    fn parse(str: &str) -> Self {
+    pub fn parse(str: &str) -> Self {
         let date: Vec<&str> = str.lines().take(1).flat_map(|l| l.split(' ')).collect();
         let month = format!("{} {}", date.first().unwrap(), date.get(2).unwrap());
 
