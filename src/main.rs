@@ -11,12 +11,9 @@ fn main() -> Result<(), std::io::Error> {
     let file = File::open("top-stats")?;
     let mut buf = String::new();
     BufReader::new(file).read_to_string(&mut buf)?;
-    let month = buf
-        .split("==============")
+    buf.split("==============")
         .map(MonthlyStat::parse)
-        .nth(1)
-        .unwrap();
+        .for_each(|s| println!("{}", s.month));
 
-    println!("{month:?}");
     Ok(())
 }
