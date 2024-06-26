@@ -1,6 +1,6 @@
-use std::ops::Add;
+use std::ops::{Add, AddAssign};
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct MonthlyStat {
     pub month: String,
     pub users: u32,
@@ -13,6 +13,10 @@ impl Add for MonthlyStat {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
+        if self.month != rhs.month {
+            panic!("Incompatible month");
+        }
+
         Self {
             month: self.month,
             users: self.users + rhs.users,
@@ -20,6 +24,19 @@ impl Add for MonthlyStat {
             project_submissions: self.project_submissions + rhs.project_submissions,
             projects_liked: self.projects_liked + rhs.projects_liked,
         }
+    }
+}
+
+impl AddAssign for MonthlyStat {
+    fn add_assign(&mut self, rhs: Self) {
+        if self.month != rhs.month {
+            panic!("Incompatible month");
+        }
+
+        self.users = self.users + rhs.users;
+        self.lessons = self.lessons + rhs.lessons;
+        self.project_submissions = self.project_submissions + rhs.project_submissions;
+        self.projects_liked = self.projects_liked + rhs.projects_liked;
     }
 }
 
@@ -121,7 +138,7 @@ mod test {
         };
 
         let second = MonthlyStat {
-            month: "June 1999".to_string(),
+            month: "December 2020".to_string(),
             users: 100,
             lessons: 200,
             project_submissions: 3,
@@ -137,5 +154,79 @@ mod test {
         };
 
         assert_eq!(expect, first + second);
+    }
+
+    #[test]
+    fn add_assign() {
+        let mut first = MonthlyStat {
+            month: "December 2020".to_string(),
+            users: 20,
+            lessons: 50,
+            project_submissions: 2,
+            projects_liked: 300,
+        };
+
+        let second = MonthlyStat {
+            month: "December 2020".to_string(),
+            users: 100,
+            lessons: 200,
+            project_submissions: 3,
+            projects_liked: 300,
+        };
+
+        let expect = MonthlyStat {
+            month: "December 2020".to_string(),
+            users: 120,
+            lessons: 250,
+            project_submissions: 5,
+            projects_liked: 600,
+        };
+
+        first += second;
+        assert_eq!(expect, first);
+    }
+
+    #[test]
+    #[should_panic]
+    fn panic_on_wrong_month() {
+        let first = MonthlyStat {
+            month: "December 2020".to_string(),
+            users: 20,
+            lessons: 50,
+            project_submissions: 2,
+            projects_liked: 300,
+        };
+
+        let second = MonthlyStat {
+            month: "June 1999".to_string(),
+            users: 100,
+            lessons: 200,
+            project_submissions: 3,
+            projects_liked: 300,
+        };
+
+        let _ = first + second;
+    }
+
+    #[test]
+    #[should_panic]
+    fn add_assign_panic_on_wrong_month() {
+        let mut first = MonthlyStat {
+            month: "December 2020".to_string(),
+            users: 20,
+            lessons: 50,
+            project_submissions: 2,
+            projects_liked: 300,
+        };
+
+        let second = MonthlyStat {
+            month: "June 1999".to_string(),
+            users: 100,
+            lessons: 200,
+            project_submissions: 3,
+            projects_liked: 300,
+        };
+
+        first += second;
     }
 }
