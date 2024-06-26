@@ -9,7 +9,13 @@ pub struct MonthlyStat {
 
 impl MonthlyStat {
     pub fn parse(str: &str) -> Self {
-        let date: Vec<&str> = str.lines().take(1).flat_map(|l| l.split(' ')).collect();
+        let date: Vec<&str> = str
+            .lines()
+            .filter(|l| !l.is_empty())
+            .take(1)
+            .flat_map(|l| l.split(' '))
+            .collect();
+
         let month = format!("{} {}", date.first().unwrap(), date.get(2).unwrap());
 
         let nums = str
@@ -68,6 +74,21 @@ mod test {
 1010 lessons completed
 2 project submissions added
 300 projects liked"#;
+
+        let result = MonthlyStat::parse(str);
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn parse_with_new_lines() {
+        let expected = MonthlyStat {
+            month: "June 1999".to_string(),
+            users: 2020,
+            lessons: 1010,
+            project_submissions: 2,
+            projects_liked: 300,
+        };
+        let str = "\r\nJune 22th, 1999\r\n2020 users signed up\r\n1010 lessons completed\r\n2 project submissions added\r\n300 projects liked\r\n";
 
         let result = MonthlyStat::parse(str);
         assert_eq!(expected, result);
