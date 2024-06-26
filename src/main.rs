@@ -3,7 +3,7 @@ use std::{
     io::{BufReader, Read},
 };
 
-use charts::{AxisPosition, Chart, Color, LineSeriesView, MarkerType, ScaleLinear};
+use charts::{AxisPosition, Chart, Color, LineSeriesView, MarkerType, ScaleBand, ScaleLinear};
 use indexmap::IndexMap;
 use monthly_stat::MonthlyStat;
 
@@ -43,8 +43,13 @@ fn draw_chart(stats: &[MonthlyStat]) {
 
     // Create a band scale that will interpolate values in [0, 200] to values in the
     // [0, availableWidth] range (the width of the chart without the margins).
-    let x = ScaleLinear::new()
-        .set_domain(vec![0_f32, stats.len() as f32])
+    let x = ScaleBand::new()
+        .set_domain(
+            stats
+                .iter()
+                .map(|s| s.month.clone())
+                .collect::<Vec<String>>(),
+        )
         .set_range(vec![0, width - left - right]);
 
     // Create a linear scale that will interpolate values in [0, 100] range to corresponding
