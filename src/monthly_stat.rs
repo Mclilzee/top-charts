@@ -9,12 +9,22 @@ pub struct MonthlyStat {
 
 impl MonthlyStat {
     fn parse(str: &str) -> Self {
+        let date: Vec<&str> = str.lines().take(1).flat_map(|l| l.split(' ')).collect();
+        let month = format!("{} {}", date.first().unwrap(), date.get(2).unwrap());
+
+        let nums = str
+            .lines()
+            .skip(1)
+            .filter_map(|l| l.split(' ').nth(0))
+            .filter_map(|s| s.parse().ok())
+            .collect::<Vec<u32>>();
+
         Self {
-            month: "December 2022".to_string(),
-            users: 400,
-            lessons: 200,
-            project_submissions: 1000,
-            projects_liked: 202020,
+            month,
+            users: *nums.first().unwrap(),
+            lessons: *nums.get(1).unwrap(),
+            project_submissions: *nums.get(2).unwrap(),
+            projects_liked: *nums.get(3).unwrap(),
         }
     }
 }
